@@ -4,7 +4,6 @@ import numpy as np
 import psycopg2
 from sqlalchemy import create_engine, Table, Column, Integer, String, Float, MetaData
 from time import sleep
-from datetime import datetime, timedelta
 
 
 print('Waiting for the data generator...')
@@ -41,10 +40,7 @@ metadata.create_all(mysql_engine)
 
 
 def extract_data():
-    one_hour_ago = datetime.now() - timedelta(hours=1)
-    one_hour_ago_timestamp = one_hour_ago.strftime("%Y-%m-%d %H:%M:%S")
-
-    query = f"SELECT * FROM devices WHERE time >= '{one_hour_ago_timestamp}';"
+    query = "SELECT * FROM devices WHERE time::bigint >= EXTRACT(EPOCH FROM (NOW() AT TIME ZONE 'UTC' - INTERVAL '1 hour'));"
     df = pd.read_sql_query(query, psql_engine)
     return df
 
