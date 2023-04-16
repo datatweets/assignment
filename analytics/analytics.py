@@ -42,11 +42,12 @@ metadata.create_all(mysql_engine)
 
 def extract_data():
     one_hour_ago = datetime.now() - timedelta(hours=1)
-    one_hour_ago_timestamp = int(one_hour_ago.timestamp())
+    one_hour_ago_timestamp = one_hour_ago.strftime("%Y-%m-%d %H:%M:%S")
 
-    query = f"SELECT * FROM devices WHERE time >= {one_hour_ago_timestamp};"
+    query = f"SELECT * FROM devices WHERE time >= '{one_hour_ago_timestamp}';"
     df = pd.read_sql_query(query, psql_engine)
     return df
+
 
 def haversine_distance(lat1, lon1, lat2, lon2):
     """
