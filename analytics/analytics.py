@@ -48,7 +48,6 @@ def extract_data():
     df = pd.read_sql_query(query, psql_engine)
     return df
 
-
 def haversine_distance(lat1, lon1, lat2, lon2):
     """
         Calculate the great-circle distance (Haversine distance) between two points on the Earth's surface,
