@@ -4,7 +4,8 @@ import numpy as np
 import psycopg2
 from sqlalchemy import create_engine, Table, Column, Integer, String, Float, MetaData
 from time import sleep
-from geopy.distance import great_circle
+from datetime import datetime, timedelta
+
 
 print('Waiting for the data generator...')
 sleep(20)
@@ -38,8 +39,12 @@ aggregated_data = Table(
 )
 metadata.create_all(mysql_engine)
 
+
 def extract_data():
-    query = "SELECT * FROM devices;"
+    one_hour_ago = datetime.now() - timedelta(hours=1)
+    one_hour_ago_timestamp = int(one_hour_ago.timestamp())
+
+    query = f"SELECT * FROM devices WHERE time >= {one_hour_ago_timestamp};"
     df = pd.read_sql_query(query, psql_engine)
     return df
 
